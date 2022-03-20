@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
 import Navbar from './components/layout/Navbar';
 import About from './components/pages/About';
 import Home from './components/pages/Home';
@@ -16,6 +18,8 @@ const App = () => {
               <Switch>
                 <Route path='/' component={Home} exact />
                 <Route path='/about' component={About} exact />
+                <Route path='/register' component={Register} exact />
+                <Route path='/login' component={Login} exact />
               </Switch>
             </div>
           </>
