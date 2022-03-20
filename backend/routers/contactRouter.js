@@ -1,26 +1,31 @@
 const express = require('express');
 
+const authGuard = require('../middleware/authGuard');
+const Contact = require('../models/contact');
+
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json({
-    message: 'Contacts fetched successfully',
-    contactCount: 2,
-    contacts: [
-      {
-        id: 1,
-        name: 'Billy',
-        email: 'billy@example.com',
-        phone: '555-555-5555',
-      },
-      {
-        id: 2,
-        name: 'Karen',
-        email: 'karen@example.com',
-        phone: '555-555-5555',
-      },
-    ],
-  });
+router.get('/', authGuard, async (req, res) => {
+  // @ts-ignore
+  const userId = req.user._id;
+
+  try {
+    const contacts = await Contact.find({
+      user: userId,
+    });
+
+    if (!contacts) {
+      return res.status(404).json({ message: 'No contacts found' });
+    }
+
+    res.json({
+      message: 'Contacts fetched successfully',
+      contactCount: contacts.length,
+      contacts: contacts,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching contacts' });
+  }
 });
 
 router.get('/:id', (req, res) => {
@@ -39,17 +44,30 @@ router.get('/:id', (req, res) => {
   });
 });
 
-router.post('/', (req, res) => {
-  const { name, email, phone } = req.body;
+router.post('/', authGuard, async (req, res) => {
+  // @ts-ignore
+  const userId = req.user._id;
 
-  res.json({
-    message: 'Contact created successfully',
-    contact: {
+  const { name, email, phone, type } = req.body;
+
+  try {
+    const newContact = new Contact({
+      user: userId,
       name,
       email,
       phone,
-    },
-  });
+      type,
+    });
+
+    const savedContact = await newContact.save();
+
+    res.status(201).json({
+      message: 'Contact created successfully',
+      contact: savedContact,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating contact' });
+  }
 });
 
 router.put('/:id', (req, res) => {
