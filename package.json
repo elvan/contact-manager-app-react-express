@@ -1,6 +1,6 @@
 {
   "name": "contact-manager-app-react-express",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Contact manager app",
   "main": "index.js",
   "scripts": {
