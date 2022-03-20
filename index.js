@@ -2,6 +2,8 @@ const dotenv = require('dotenv');
 const express = require('express');
 
 const connectToDatabase = require('./backend/database/connect');
+const errorHandler = require('./backend/middleware/errorHandler');
+
 const contactRouter = require('./backend/routers/contactRouter');
 const userRouter = require('./backend/routers/userRouter');
 
@@ -18,6 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/contacts', contactRouter);
 app.use('/api/users', userRouter);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running in ${NODE_ENV} mode on port ${PORT}`);
