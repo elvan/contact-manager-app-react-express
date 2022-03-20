@@ -67,17 +67,49 @@ router.post(
   }
 );
 
-router.post('/login', (req, res) => {
-  const { email, password } = req.body;
+router.post(
+  '/login',
+  [
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  res.json({
-    message: 'User logged in successfully',
-    user: {
-      email,
-      token: '',
-    },
-  });
-});
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    try {
+      const user = await User.findOne({ email: email });
+
+      if (!user) {
+        return res.status(400).json({ message: 'User does not exist' });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      res.json({
+        message: 'User logged in successfully',
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          token: generateToken(user._id),
+        },
+      });
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  }
+);
 
 router.get('/current-user', (req, res) => {
   res.json({
