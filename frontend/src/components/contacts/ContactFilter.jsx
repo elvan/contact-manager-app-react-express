@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ContactContext } from '../../context/contact/ContactState';
+import { ContactContext } from '../../context/ContactState';
 
 const ContactFilter = () => {
   const { filterContacts, clearFilter } = useContext(ContactContext);

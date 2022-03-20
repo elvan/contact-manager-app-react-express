@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ContactContext } from '../../context/contact/ContactState';
+import { ContactContext } from '../../context/ContactState';
 
 const ContactItem = ({ contact }) => {
   const { id, name, email, phone, type } = contact;

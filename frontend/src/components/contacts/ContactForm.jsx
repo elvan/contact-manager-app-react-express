@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { ContactContext } from '../../context/contact/ContactState';
+import { ContactContext } from '../../context/ContactState';
 
 const initialContact = {
   name: '',
