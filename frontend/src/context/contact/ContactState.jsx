@@ -3,7 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   ADD_CONTACT,
   CLEAR_CURRENT,
+  CLEAR_FILTER,
   DELETE_CONTACT,
+  FILTER_CONTACTS,
   SET_CURRENT,
   UPDATE_CONTACT,
 } from '../types';
@@ -34,7 +36,7 @@ const initialState = {
     },
   ],
   current: null,
-  filtered: null,
+  filtered: [],
   error: null,
 };
 
@@ -69,6 +71,16 @@ const ContactState = (props) => {
     dispatch({ type: CLEAR_CURRENT });
   };
 
+  const filterContacts = (contacts) => {
+    // @ts-ignore
+    dispatch({ type: FILTER_CONTACTS, payload: contacts });
+  };
+
+  const clearFilter = () => {
+    // @ts-ignore
+    dispatch({ type: CLEAR_FILTER });
+  };
+
   return (
     <ContactContext.Provider
       value={{
@@ -81,6 +93,8 @@ const ContactState = (props) => {
         deleteContact,
         setCurrent,
         clearCurrent,
+        filterContacts,
+        clearFilter,
       }}
     >
       {props.children}

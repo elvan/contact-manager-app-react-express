@@ -35,6 +35,7 @@ const ContactForm = () => {
     }
 
     handleClear();
+    setContact(initialContact);
   };
 
   const handleClear = () => {
@@ -42,7 +43,7 @@ const ContactForm = () => {
   };
 
   useEffect(() => {
-    if (current) {
+    if (current !== null) {
       setContact(current);
     } else {
       setContact(initialContact);
