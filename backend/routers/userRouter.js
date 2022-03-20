@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator/check');
 
 const User = require('../models/user');
+const authGuard = require('../middleware/authGuard');
 
 dotenv.config();
 
@@ -111,13 +112,13 @@ router.post(
   }
 );
 
-router.get('/current-user', (req, res) => {
+router.get('/current-user', authGuard, (req, res) => {
+  // @ts-ignore
+  const currentUser = req.user;
+
   res.json({
     message: 'Current user fetched successfully',
-    user: {
-      name: 'Aaron',
-      email: 'aaron@example.com',
-    },
+    user: currentUser,
   });
 });
 
