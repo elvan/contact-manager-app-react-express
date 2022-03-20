@@ -1,0 +1,39 @@
+{
+  "name": "contact-manager-app-react-express",
+  "version": "0.6.0",
+  "description": "Contact manager app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon --ignore frontend/ index.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elvan/contact-manager-app-react-express.git"
+  },
+  "keywords": [],
+  "author": "Elvan Hidayat <elvanhd@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elvan/contact-manager-app-react-express/issues"
+  },
+  "homepage": "https://github.com/elvan/contact-manager-app-react-express#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.7",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-async-handler": "^1.2.0",
+    "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.7"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.26",
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
