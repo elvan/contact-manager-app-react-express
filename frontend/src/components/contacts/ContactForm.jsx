@@ -11,9 +11,8 @@ const initialContact = {
 const ContactForm = () => {
   const [contact, setContact] = useState(initialContact);
 
-  const contactContext = useContext(ContactContext);
-
-  useEffect(() => {}, []);
+  const { current, clearCurrent, addContact, updateContact } =
+    useContext(ContactContext);
 
   const { name, email, phone, type } = contact;
 
@@ -23,15 +22,38 @@ const ContactForm = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    contactContext.addContact(contact);
-    clearAll();
+
+    if (!name || !email || !phone || !type) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    if (current === null) {
+      addContact(contact);
+    } else {
+      updateContact(contact);
+    }
+
+    handleClear();
   };
 
-  const clearAll = () => {};
+  const handleClear = () => {
+    clearCurrent();
+  };
+
+  useEffect(() => {
+    if (current) {
+      setContact(current);
+    } else {
+      setContact(initialContact);
+    }
+  }, [current]);
 
   return (
     <form onSubmit={onSubmit}>
-      <h2 className='text-primary'>Add Contact</h2>
+      <h2 className='text-primary'>
+        {current ? 'Edit Contact' : 'Add Contact'}
+      </h2>
       <input
         type='text'
         placeholder='Name'
@@ -75,17 +97,17 @@ const ContactForm = () => {
       <div>
         <input
           type='submit'
-          value={'Add Contact'}
+          value={current ? 'Update Contact' : 'Create Contact'}
           className='btn btn-primary btn-block'
         />
       </div>
-      {
+      {current && (
         <div>
-          <button className='btn btn-light btn-block' onClick={clearAll}>
+          <button className='btn btn-light btn-block' onClick={handleClear}>
             Clear
           </button>
         </div>
-      }
+      )}
     </form>
   );
 };

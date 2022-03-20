@@ -5,6 +5,7 @@ import {
   CLEAR_CURRENT,
   DELETE_CONTACT,
   SET_CURRENT,
+  UPDATE_CONTACT,
 } from '../types';
 import contactReducer from './contactReducer';
 
@@ -48,6 +49,11 @@ const ContactState = (props) => {
     dispatch({ type: ADD_CONTACT, payload: contact });
   };
 
+  const updateContact = (contact) => {
+    // @ts-ignore
+    dispatch({ type: UPDATE_CONTACT, payload: contact });
+  };
+
   const deleteContact = (id) => {
     // @ts-ignore
     dispatch({ type: DELETE_CONTACT, payload: id });
@@ -71,6 +77,7 @@ const ContactState = (props) => {
         filtered: state.filtered,
         error: state.error,
         addContact,
+        updateContact,
         deleteContact,
         setCurrent,
         clearCurrent,
