@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/AuthState';
 
 const Register = () => {
-  const [user, setUser] = useState({
+  const initialUser = {
     name: '',
     email: '',
     password: '',
     password2: '',
-  });
+  };
+
+  const [user, setUser] = useState(initialUser);
 
   const { name, email, password, password2 } = user;
+
+  const { isLoading, error, register, clearErrors } = useContext(AuthContext);
 
   const onChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -22,15 +27,37 @@ const Register = () => {
     } else if (password !== password2) {
       alert('Passwords do not match');
     } else {
-      console.log('Success');
+      clearErrors();
+      register({
+        name,
+        email,
+        password,
+      });
+      if (!error) {
+        setUser(initialUser);
+      }
     }
   };
+
+  useEffect(() => {
+    return () => {};
+  }, []);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className='form-container'>
       <h1>
         Account <span className='text-primary'>Register</span>
       </h1>
+
+      {error && (
+        <div className={`alert alert-danger`}>
+          <i className='fas fa-info-circle' /> {error}
+        </div>
+      )}
 
       <form onSubmit={onSubmit}>
         <div className='form-group'>

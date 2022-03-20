@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { createContext, useReducer } from 'react';
 import {
   AUTH_ERROR,
@@ -26,34 +27,39 @@ const authReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        loading: false,
+        isLoading: false,
         user: action.payload,
       };
+
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
+      localStorage.setItem('contact-manager-app-token', action.payload.token);
       return {
         ...state,
         ...action.payload,
         isAuthenticated: true,
-        loading: false,
+        isLoading: false,
       };
-    case REGISTER_FAIL:
+
     case AUTH_ERROR:
+    case REGISTER_FAIL:
     case LOGIN_FAIL:
     case LOGOUT:
       return {
         ...state,
-        token: null,
         isAuthenticated: false,
-        loading: false,
+        isLoading: false,
+        token: null,
         user: null,
         error: action.payload,
       };
+
     case CLEAR_ERRORS:
       return {
         ...state,
         error: null,
       };
+
     default:
       throw new Error(`Unsupported type of: ${action.type}`);
   }
@@ -61,6 +67,48 @@ const authReducer = (state, action) => {
 
 const AuthState = (props) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+
+  const loadUser = () => {
+    console.log('loadUser');
+  };
+
+  const register = async (formData) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        '/api/users/register',
+        formData,
+        config
+      );
+
+      // @ts-ignore
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      // @ts-ignore
+      dispatch({ type: REGISTER_FAIL, payload: error.response.data.message });
+    }
+  };
+
+  const login = () => {
+    console.log('login');
+  };
+
+  const logout = () => {
+    console.log('logout');
+  };
+
+  const clearErrors = () => {
+    // @ts-ignore
+    dispatch({ type: CLEAR_ERRORS });
+  };
 
   return (
     <AuthContext.Provider
@@ -70,6 +118,11 @@ const AuthState = (props) => {
         error: state.error,
         isAuthenticated: state.isAuthenticated,
         isLoading: state.isLoading,
+        loadUser,
+        register,
+        login,
+        logout,
+        clearErrors,
       }}
     >
       {props.children}
