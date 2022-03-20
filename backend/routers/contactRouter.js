@@ -14,8 +14,11 @@ router.get('/', authGuard, async (req, res) => {
       user: userId,
     });
 
-    if (!contacts) {
-      return res.status(404).json({ message: 'No contacts found' });
+    if (contacts.length === 0) {
+      return res.status(404).json({
+        message: 'No contacts found',
+        contactCount: 0,
+      });
     }
 
     res.json({
@@ -28,20 +31,35 @@ router.get('/', authGuard, async (req, res) => {
   }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', authGuard, async (req, res) => {
+  // @ts-ignore
+  const userId = req.user._id;
+
   const { id } = req.params;
 
-  const contact = {
-    id: 1,
-    name: 'Billy',
-    email: 'billy@example.com',
-    phone: '555-555-5555',
-  };
+  try {
+    const contact = await Contact.findById(id);
 
-  res.json({
-    message: 'Contact fetched successfully',
-    contact: contact,
-  });
+    if (!contact) {
+      console.log('Contact not found');
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    if (contact.user.toString() !== userId.toString()) {
+      console.log('Contact not found');
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    res.json({
+      message: 'Contact fetched successfully',
+      contact: contact,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Error fetching contact',
+    });
+  }
 });
 
 router.post('/', authGuard, async (req, res) => {
