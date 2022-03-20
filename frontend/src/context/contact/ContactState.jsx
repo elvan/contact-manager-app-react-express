@@ -1,6 +1,11 @@
 import { createContext, useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { ADD_CONTACT, DELETE_CONTACT } from '../types';
+import {
+  ADD_CONTACT,
+  CLEAR_CURRENT,
+  DELETE_CONTACT,
+  SET_CURRENT,
+} from '../types';
 import contactReducer from './contactReducer';
 
 const initialState = {
@@ -48,6 +53,16 @@ const ContactState = (props) => {
     dispatch({ type: DELETE_CONTACT, payload: id });
   };
 
+  const setCurrent = (contact) => {
+    // @ts-ignore
+    dispatch({ type: SET_CURRENT, payload: contact });
+  };
+
+  const clearCurrent = () => {
+    // @ts-ignore
+    dispatch({ type: CLEAR_CURRENT });
+  };
+
   return (
     <ContactContext.Provider
       value={{
@@ -57,6 +72,8 @@ const ContactState = (props) => {
         error: state.error,
         addContact,
         deleteContact,
+        setCurrent,
+        clearCurrent,
       }}
     >
       {props.children}
