@@ -57,6 +57,7 @@ router.post(
         user: {
           name: newUser.name,
           email: newUser.email,
+          token: generateToken(newUser._id),
         },
       });
     } catch (error) {
@@ -87,5 +88,11 @@ router.get('/current-user', (req, res) => {
     },
   });
 });
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
 
 module.exports = router;
