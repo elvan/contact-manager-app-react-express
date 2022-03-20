@@ -3,8 +3,7 @@ import { ContactContext } from '../../context/contact/ContactState';
 import ContactItem from './ContactItem';
 
 const ContactList = () => {
-  const contactContext = useContext(ContactContext);
-  const { contacts } = contactContext;
+  const { contacts } = useContext(ContactContext);
 
   return (
     <>

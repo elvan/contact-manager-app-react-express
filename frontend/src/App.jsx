@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Navbar from './component/layout/Navbar';
-import About from './component/pages/About';
-import Home from './component/pages/Home';
+import Navbar from './components/layout/Navbar';
+import About from './components/pages/About';
+import Home from './components/pages/Home';
 import ContactState from './context/contact/ContactState';
 
 const App = () => {
